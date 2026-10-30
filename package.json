@@ -1,0 +1,20 @@
+{
+  "name": "promptcut",
+  "version": "1.0.0",
+  "description": "Studio-grade code-driven motion graphics library for Claude AI",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "dev": "python -m http.server 3000",
+    "lint": "node --check index.html"
+  },
+  "keywords": [
+    "motion-graphics",
+    "claude-ai",
+    "canvas-animation",
+    "prompt-library",
+    "web-audio"
+  ],
+  "author": "PromptCut",
+  "license": "MIT"
+}

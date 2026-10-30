@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/png" href="assets/logo.png">
+<title>PromptCut: Motion Graphics Style Library</title>
+<meta name="description" content="Production-ready motion graphics prompt templates for Claude. Generate animated explainer videos in code with synchronized audio and clean design systems.">
+<meta property="og:title" content="PromptCut: Motion Graphics Style Library">
+<meta property="og:description" content="Production-ready motion graphics prompt templates for Claude. Generate animated explainer videos in code with synchronized audio.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PromptCut: Motion Graphics Style Library">
+<meta name="twitter:description" content="Production-ready motion graphics prompt templates for Claude.">
+<meta name="twitter:image" content="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a personal homepage. Nav, a warm intro with the avatar in a periwinkle disc, one featured card for the
+   Style Library, the library itself, then two small cards (newsletter, channel) and a quiet footer.
+   Design tokens for JoyBoy. Clean modern aesthetic. */
+/* Design tokens imported from tokens.css */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.6 var(--sans); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; border-radius: 6px; }
+
+/* nav */
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 26px; }
+.brand { font: 400 26px var(--serif); text-decoration: none; position: relative; padding-bottom: 4px; }
+.brand svg { position: absolute; left: -4px; bottom: -6px; width: 112%; height: 14px; }
+.links { display: flex; align-items: center; gap: 26px; font-weight: 500; font-size: 15px; }
+.links a { text-decoration: none; }
+.links a:not(.pill):hover { color: var(--cobalt); }
+.pill { background: var(--peach); color: var(--ink); text-decoration: none; font-weight: 600; padding: 11px 22px; border-radius: 999px; transition: background 0.15s; border: 0; cursor: pointer; font-size: 15px; font-family: var(--sans); display: inline-flex; align-items: center; gap: 8px; }
+.pill:hover { background: var(--peach-dk); }
+.pill.cobalt { background: var(--cobalt); color: #fff; }
+.pill.cobalt:hover { background: #1f3576; }
+.pill.ghost { background: transparent; border: 1.5px solid var(--line); }
+.pill.ghost:hover { border-color: var(--soft); background: transparent; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: center; padding-block: 40px 70px; }
+.disc { position: relative; width: min(400px, 100%); aspect-ratio: 1; justify-self: center; }
+.disc img { position: absolute; inset: 8%; width: 84%; height: 84%; border-radius: 50%; object-fit: cover; display: block; background: var(--peri); }
+.disc svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero h1 { font: 400 clamp(44px, 5.4vw, 66px)/1.02 var(--serif); margin: 0 0 22px; letter-spacing: -0.01em; }
+.hero h1 .u { position: relative; white-space: nowrap; }
+.hero h1 .u svg { position: absolute; left: 0; bottom: -14px; width: 100%; height: 20px; }
+.hero .intro { font-size: clamp(21px, 2.3vw, 27px); line-height: 1.35; margin: 0 0 28px; max-width: 30ch; color: var(--ink); }
+.hero .intro a { text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--magenta); font-weight: 600; }
+.hero .row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* featured card */
+.feature { position: relative; background: var(--card); border-radius: 26px; box-shadow: var(--shadow); padding: 44px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 44px; align-items: center; }
+.feature .arrow { position: absolute; right: 38px; top: -64px; width: 70px; height: 90px; }
+.kicker { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--magenta); margin: 0 0 10px; }
+.feature h2 { font: 400 clamp(32px, 4vw, 44px)/1.05 var(--serif); margin: 0 0 16px; }
+.feature p { margin: 0 0 14px; color: var(--soft); max-width: 46ch; }
+.feature p strong { color: var(--ink); font-weight: 600; }
+.feature .pill { margin-top: 10px; }
+.shot { position: relative; border-radius: 16px; overflow: hidden; background: #000; aspect-ratio: 16 / 9; max-width: 100%; box-shadow: 0 18px 40px -18px rgba(24,35,77,0.45); cursor: pointer; border: 0; padding: 0; display: block; width: 100%; }
+.shot img, .shot video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.play { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.92); display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+.play::after { content: ""; border-left: 18px solid var(--ink); border-top: 11px solid transparent; border-bottom: 11px solid transparent; margin-left: 5px; }
+
+/* library */
+.lib { padding-block: 96px 20px; }
+.lib-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 28px; }
+.lib-head h2 { font: 400 clamp(32px, 4vw, 44px)/1.05 var(--serif); margin: 0; }
+.lib-head p { margin: 8px 0 0; color: var(--soft); max-width: 52ch; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 600 14px var(--sans); color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.chip span { color: var(--soft); margin-left: 4px; font-variant-numeric: tabular-nums; }
+.chip[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.chip[aria-pressed="true"] span { color: #c9cde0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+.card { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
+.thumb { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; max-width: 100%; border: 0; padding: 0; background: #000; cursor: pointer; }
+.thumb img, .thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-body { padding: 20px 22px 22px; display: grid; gap: 8px; align-content: start; }
+.meta { display: flex; gap: 10px; font-size: 13px; color: var(--soft); font-weight: 600; }
+.meta .num { color: var(--magenta); font-variant-numeric: tabular-nums; }
+.card h3 { font: 400 26px/1.15 var(--serif); margin: 0; }
+.card p { margin: 0; color: var(--soft); font-size: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.card .pill { justify-self: start; margin-top: 8px; }
+@media (min-width: 880px) {
+  .card:only-child { grid-column: 1 / -1; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-rows: auto; }
+  .card:only-child .thumb { height: 100%; aspect-ratio: auto; min-height: 320px; }
+  .card:only-child .card-body { padding: 34px 36px; align-content: center; gap: 12px; }
+  .card:only-child h3 { font-size: 34px; }
+  .card:only-child p { -webkit-line-clamp: 6; }
+}
+.soon { margin: 22px 0 0; color: var(--soft); font-size: 15px; }
+
+/* more from me */
+.more { padding-block: 90px 30px; }
+.more h2 { font: 400 clamp(30px, 3.6vw, 40px)/1.1 var(--serif); margin: 0 0 26px; }
+.trio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.mini { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); padding: 26px 26px 24px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.mini .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; }
+.mini h3 { font: 400 23px/1.2 var(--serif); margin: 4px 0 0; }
+.mini p { margin: 0 0 8px; color: var(--soft); font-size: 15px; }
+.mini a { font-weight: 600; text-decoration: none; color: var(--cobalt); }
+.mini a:hover { text-decoration: underline; text-underline-offset: 3px; }
+footer { padding-block: 50px 46px; color: var(--soft); font-size: 14px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); margin-top: 60px; }
+
+/* style sheet dialog */
+dialog { width: min(920px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 0; border-radius: 22px; background: var(--card); color: var(--ink); overflow: auto; box-shadow: 0 30px 80px -20px rgba(10,15,40,0.5); }
+dialog::backdrop { background: rgba(24,35,77,0.55); backdrop-filter: blur(3px); }
+.sv { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: #000; }
+.sv video { width: 100%; height: 100%; display: block; }
+.close { position: absolute; top: 12px; right: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.92); color: var(--ink); font: 600 22px var(--sans); cursor: pointer; }
+.sb { padding: 26px 30px 28px; display: grid; gap: 18px; }
+.sb h4 { font: 400 clamp(28px, 4vw, 38px)/1.1 var(--serif); margin: 6px 0 10px; }
+.sb .look { margin: 0; color: var(--soft); max-width: 72ch; }
+.how { margin: 0; background: var(--bg); border-radius: 14px; padding: 14px 18px; }
+.how b { font-weight: 700; }
+.make { display: grid; gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; }
+.make h5 { margin: 0; font: 400 22px var(--serif); }
+.seg { display: inline-flex; gap: 4px; background: var(--bg); border-radius: 12px; padding: 4px; width: max-content; max-width: 100%; }
+.seg button { font: 600 14px var(--sans); border: 0; border-radius: 9px; padding: 8px 14px; background: transparent; color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--card); box-shadow: 0 1px 3px rgba(24,35,77,0.15); }
+.mnote { margin: 0; color: var(--soft); font-size: 14px; }
+label.field { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+textarea { width: 100%; min-height: 96px; resize: vertical; font: 400 16px/1.5 var(--sans); color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+textarea:focus-visible { outline: none; border-color: var(--peri); box-shadow: 0 0 0 4px rgba(124,145,208,0.22); }
+textarea::placeholder { color: #8a90a8; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; }
+.check input { width: 18px; height: 18px; margin-top: 3px; accent-color: var(--cobalt); flex: none; }
+.fallback { display: grid; gap: 8px; }
+.fallback textarea { min-height: 150px; font: 12px/1.4 ui-monospace, Menlo, monospace; }
+.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 18px; }
+.foot .nav2 { display: flex; gap: 8px; }
+.status { color: var(--cobalt); font-weight: 600; font-size: 15px; min-height: 1.4em; }
+
+/* clone any style */
+.clone { padding-block: 72px 0; }
+.clone-card { background: var(--card); border-radius: 26px; box-shadow: var(--shadow); padding: 44px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 44px; align-items: start; }
+.clone-card h2 { font: 400 clamp(32px, 4vw, 44px)/1.05 var(--serif); margin: 0 0 16px; }
+.clone-card p { margin: 0 0 14px; color: var(--soft); max-width: 46ch; }
+.clone-card .kicker { color: var(--magenta); margin: 0 0 10px; }
+.clone-steps { margin: 6px 0 0; padding-left: 22px; display: grid; gap: 8px; color: var(--ink); }
+.clone-steps li::marker { color: var(--magenta); font-weight: 700; }
+.clone-form { display: grid; gap: 14px; min-width: 0; }
+select.pick { width: 100%; font: 500 16px/1.4 var(--sans); color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; }
+select.pick:focus-visible { outline: none; border-color: var(--peri); box-shadow: 0 0 0 4px rgba(124,145,208,0.22); }
+.clone-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.mnote2 { margin: 0; font-size: 14px; color: var(--soft); }
+@media (max-width: 860px) { .clone-card { grid-template-columns: 1fr; padding: 28px 22px; gap: 24px; } }
+
+/* email gate */
+dialog#gate { width: min(460px, calc(100vw - 24px)); }
+.gate { padding: 34px 32px 28px; display: grid; gap: 14px; }
+.gate h3 { font: 400 30px/1.1 var(--serif); margin: 0; }
+.gate p { margin: 0; color: var(--soft); }
+.gate .kicker { color: var(--magenta); margin: 0; }
+.gate input[type=email] { width: 100%; font: 400 17px/1.4 var(--sans); color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.gate input[type=email]:focus-visible { outline: none; border-color: var(--peri); box-shadow: 0 0 0 4px rgba(124,145,208,0.22); }
+.gate .pill { justify-content: center; width: 100%; }
+.gate .fine { font-size: 13px; color: var(--soft); }
+.gate .err { color: #b3261e; font-weight: 600; font-size: 14px; min-height: 1.2em; }
+.gate .x { position: absolute; top: 10px; right: 12px; background: transparent; border: 0; font-size: 26px; line-height: 1; color: var(--soft); cursor: pointer; padding: 6px 10px; border-radius: 10px; }
+.gate .x:focus-visible { outline: 2px solid var(--peri); }
+
+@media (max-width: 860px) {
+  .links a:not(.pill) { display: none; }
+  .hero { grid-template-columns: 1fr; gap: 30px; padding-block: 10px 60px; }
+  .disc { width: min(280px, 80%); }
+  .feature { grid-template-columns: 1fr; padding: 28px 22px; gap: 28px; }
+  .feature .arrow { display: none; }
+  .trio { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+  .sb { padding: 20px 18px 22px; }
+}
+@media (prefers-reduced-motion: reduce) { .pill { transition: none; } }
+
+@media (max-width: 800px) {
+  #guide div[style*="grid-template-columns:repeat(2"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+</style>
+
+  <link rel="stylesheet" href="tokens.css">
+</head>
+<body>
+<header class="wrap nav">
+  <a class="brand" href="#top">PromptCut<svg viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 30 2, 70 2, 117 6" fill="none" stroke="#7c91d0" stroke-width="3" stroke-linecap="round"/></svg></a>
+  <nav class="links" aria-label="Main">
+    <a href="#library">Style Library</a>
+    <a href="#clone">Clone a style</a>
+    <a href="#guide">Guide</a>
+    <a class="pill" href="#library" style="background:var(--peach);color:#ffffff;border:none;">Explore Styles</a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="wrap hero">
+    <div class="disc">
+      <svg viewBox="0 0 400 400" aria-hidden="true">
+        <path d="M 62 300 A 170 170 0 0 1 70 92" fill="none" stroke="#efa67d" stroke-width="7" stroke-linecap="round"/>
+        <path d="M 40 250 A 190 190 0 0 1 44 170" fill="none" stroke="#efa67d" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+        <path d="M 330 320 A 172 172 0 0 1 300 352" fill="none" stroke="#add1e7" stroke-width="7" stroke-linecap="round"/>
+      </svg>
+      <img src="assets/logo.png" alt="PromptCut Logo" style="background:#ffffff;object-fit:cover;">
+    </div>
+    <div>
+      <h1>Motion graphics, <span class="u">drawn in code<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 12 C 50 5, 120 4, 196 9" fill="none" stroke="#b24680" stroke-width="4" stroke-linecap="round"/><path d="M30 17 C 80 12, 130 12, 170 14" fill="none" stroke="#b24680" stroke-width="2.5" stroke-linecap="round" opacity="0.6"/></svg></span></h1>
+      <p class="intro">Studio-grade explainer animations written in code by Claude. Pick a visual style, add your topic or voiceover, and export production-ready motion graphics.</p>
+      <div class="row">
+        <a class="pill cobalt" href="#library">Browse the Style Library</a>
+        <a class="pill ghost" href="#guide">Guide &darr;</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="feature">
+      <svg class="arrow" viewBox="0 0 70 90" aria-hidden="true"><path d="M40 4 C 62 18, 58 40, 38 40 C 22 40, 24 22, 40 26 C 58 32, 56 62, 26 82" fill="none" stroke="#efa67d" stroke-width="3" stroke-linecap="round"/><path d="M26 82 L 30 68 M26 82 L 40 78" fill="none" stroke="#efa67d" stroke-width="3" stroke-linecap="round"/></svg>
+      <div>
+        <p class="kicker">New · Free</p>
+        <h2>The Style Library</h2>
+        <p><strong>Motion graphics you can copy.</strong> Every style is a full animation, sound included, drawn in code by Claude.</p>
+        <p>Pick one, add your topic or your voiceover timing, and paste the prompt into Claude. You get the same look for your own videos.</p>
+        <a class="pill" href="#library">See the styles</a>
+      </div>
+      <button class="shot" type="button" data-open="creator-motion" aria-label="Watch the Creator Motion Graphics sample">
+        <img src="styles/creator-motion/poster.jpg" alt="">
+        <span class="play" aria-hidden="true"></span>
+      </button>
+    </div>
+  </section>
+
+  <section class="wrap lib" id="library" aria-labelledby="lib-title">
+    <div class="lib-head">
+      <div>
+        <h2 id="lib-title">Styles</h2>
+        <p>Watch a sample, then copy its prompt. Each one rebuilds the look around your content.</p>
+      </div>
+      <nav class="filters" id="filters" aria-label="Filter by family"></nav>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p class="soon">New styles land every week.</p>
+  </section>
+
+  
+
+
+
+<section class="wrap clone" id="clone" aria-labelledby="clone-title">
+    <div class="clone-card">
+      <div>
+        <p class="kicker">New · Free</p>
+        <h2 id="clone-title">Clone any style</h2>
+        <p><strong>Found a look you love?</strong> Send Claude a screenshot and it rebuilds that look as a new animated style, sound included.</p>
+        <ol class="clone-steps">
+          <li>Pick a starting style. Choose the one closest to the look you want.</li>
+          <li>Copy the prompt and paste it into a new Claude chat.</li>
+          <li>Attach 1 to 3 screenshots of the style you want, then send.</li>
+        </ol>
+      </div>
+      <div class="clone-form">
+        <label class="field" for="clone-base">Start from
+          <select class="pick" id="clone-base"></select>
+        </label>
+        <label class="field" for="clone-topic">Your topic (optional)
+          <textarea id="clone-topic" placeholder="e.g. 3 habits that made me a better editor"></textarea>
+        </label>
+        <p class="mnote2">Claude first explains how the animation engine works, then shows you a test frame of your style, and only builds the full video after you say OK.</p>
+        <div class="clone-row">
+          <button class="pill" type="button" id="clone-copy">Copy clone prompt</button>
+          <span class="status" id="clone-status" role="status"></span>
+        </div>
+        <div class="fallback" id="clone-fallback" hidden>
+          <p class="mnote2">Your browser blocked automatic copying. The prompt is selected below: press Ctrl+C (or Cmd+C).</p>
+          <textarea id="clone-fallback-text" readonly aria-label="Clone prompt text"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+<!-- ==================== CREATOR GUIDE (FROM VIDEO TRANSCRIPT) ==================== -->
+<!-- ==================== CREATOR GUIDE ==================== -->
+<section class="wrap pad" id="guide" aria-labelledby="guide-title" style="padding-top:48px;padding-bottom:48px;">
+  <div class="section-head" style="margin-bottom:32px;text-align:left;">
+    <p class="kicker" style="font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--cobalt);margin:0 0 6px;">Tutorial &amp; Workflow</p>
+    <h2 id="guide-title" style="font-family:var(--serif);font-size:32px;color:var(--ink);margin:0 0 10px;">Guide</h2>
+    <p style="color:var(--soft);font-size:16px;max-width:680px;line-height:1.6;margin:0;">
+      A practical walkthrough for generating motion graphics in code: how to run prompt templates, align text animations with voiceover timestamps, clone custom aesthetics, and monetize.
+    </p>
+  </div>
+
+  <!-- Symmetric 2x2 Grid -->
+  <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:24px;margin-bottom:24px;">
+    
+    <!-- 1: Standalone Explainer -->
+    <div class="card" style="padding:28px;border-radius:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="background:#edf1fa;color:var(--cobalt);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;">Step 1</span>
+          <span style="color:var(--soft);font-size:12px;font-weight:600;">Text to Video</span>
+        </div>
+        <h3 style="font-family:var(--serif);font-size:22px;color:var(--ink);margin:0 0 10px;">Standalone Explainer</h3>
+        <p style="color:var(--soft);font-size:14px;line-height:1.6;margin:0 0 16px;">
+          Use this when you want Claude to research, plan, and animate a topic without recorded footage.
+        </p>
+        <ol style="color:var(--ink);font-size:14px;line-height:1.75;margin:0;padding-left:20px;">
+          <li>Select a style above, such as Creator Motion Graphics or Clean Tech.</li>
+          <li>Enter your topic, for example: <i>How protein helps you build muscle</i>.</li>
+          <li>Copy the prompt and paste it into Claude. Claude writes a storyboard plan showing every screen.</li>
+          <li>Review the slides. Ask Claude to change wording or scenes if needed.</li>
+          <li>Reply <i>OK</i> to render the interactive animation in code.</li>
+          <li>For vertical Shorts or Reels, tell Claude: <i>Make this in vertical 9:16 portrait format</i>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 2: Voiceover Timing -->
+    <div class="card" style="padding:28px;border-radius:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="background:#fef0ea;color:var(--peach-dk);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;">Step 2</span>
+          <span style="color:var(--soft);font-size:12px;font-weight:600;">Voiceover Sync</span>
+        </div>
+        <h3 style="font-family:var(--serif);font-size:22px;color:var(--ink);margin:0 0 10px;">Sync Graphics to Your Voice</h3>
+        <p style="color:var(--soft);font-size:14px;line-height:1.6;margin:0 0 16px;">
+          Lock on-screen text and sound effects to your exact spoken words for high retention.
+        </p>
+        <ol style="color:var(--ink);font-size:14px;line-height:1.75;margin:0;padding-left:20px;">
+          <li>Give your recorded video or audio file to Claude and ask:
+            <code style="display:block;background:var(--bg);padding:6px 10px;border-radius:6px;font-size:12px;margin:6px 0;color:var(--cobalt);font-family:ui-monospace,monospace;">Transcribe this video. Give me word level timestamps.</code>
+          </li>
+          <li>Copy the transcript data generated by Claude.</li>
+          <li>Choose a style above, switch to <b>With Voiceover</b>, paste the transcript, and copy the prompt.</li>
+          <li>Paste into Claude. Text and sound effects will land on the exact millisecond each word is spoken.</li>
+          <li>To show your camera video, tell Claude: <i>Keep my facecam video visible on screen alongside graphics</i>.</li>
+          <li>To test hooks, ask Claude: <i>Give me 3 new variations for the first 3 seconds</i>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 3: Clone Any Style -->
+    <div class="card" style="padding:28px;border-radius:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="background:#faeef5;color:var(--magenta);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;">Step 3</span>
+          <span style="color:var(--soft);font-size:12px;font-weight:600;">Custom Design</span>
+        </div>
+        <h3 style="font-family:var(--serif);font-size:22px;color:var(--ink);margin:0 0 10px;">Clone Any Visual Style</h3>
+        <p style="color:var(--soft);font-size:14px;line-height:1.6;margin:0 0 16px;">
+          Replicate the look and motion of any channel or creator using screenshots.
+        </p>
+        <ol style="color:var(--ink);font-size:14px;line-height:1.75;margin:0;padding-left:20px;">
+          <li>Take two or three screenshots of an animation style you like, such as Kurzgesagt or Infographics Show.</li>
+          <li>Scroll to the <b>Clone any style</b> section below, pick the closest starting template, and copy the clone prompt.</li>
+          <li>Paste the prompt into Claude and attach your screenshots.</li>
+          <li>Claude analyzes the geometry, colors, typography, and motion rules into a new code system.</li>
+          <li>Save the result: <i>Save this design system. Next time I share a script, build the video in this style</i>.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- 4: Monetization -->
+    <div class="card" style="padding:28px;border-radius:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:space-between;">
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="background:#edf1fa;color:var(--cobalt);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;">Step 4</span>
+          <span style="color:var(--soft);font-size:12px;font-weight:600;">Monetization</span>
+        </div>
+        <h3 style="font-family:var(--serif);font-size:22px;color:var(--ink);margin:0 0 10px;">How to Monetize This Skill</h3>
+        <p style="color:var(--soft);font-size:14px;line-height:1.6;margin:0 0 16px;">
+          Two proven business models discussed in the video tutorial for earning income:
+        </p>
+        <div style="margin-bottom:14px;">
+          <b style="color:var(--ink);font-size:14px;">Faceless Explainer Channels</b>
+          <p style="color:var(--soft);font-size:13.5px;line-height:1.6;margin:4px 0 0;">
+            Produce high curiosity explainer videos, like <i>Why grocery stores put milk at the back</i>. Generate narration with ElevenLabs, create animations with Claude, and monetize through ad revenue and brand deals.
+          </p>
+        </div>
+        <div>
+          <b style="color:var(--ink);font-size:14px;">Video Editing Services for Creators</b>
+          <p style="color:var(--soft);font-size:13.5px;line-height:1.6;margin:4px 0 0;">
+            Complex motion graphics take several days in After Effects. Most YouTubers do not code or know how to run Claude artifacts. Offer fast turnaround motion graphics editing to channels and businesses.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Symmetric 2-Column Tips Callout -->
+  <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:24px;">
+    
+    <div class="card" style="padding:22px 24px;border-radius:16px;box-shadow:var(--shadow);border-left:4px solid var(--peach);">
+      <h4 style="font-family:var(--serif);font-size:18px;color:var(--ink);margin:0 0 8px;">Audio and Recording Tips</h4>
+      <p style="color:var(--soft);font-size:13.5px;line-height:1.65;margin:0 0 8px;">
+        <b>Web Audio Sound Effects:</b> The generated code synthesizes clicks, pops, and risers directly in the browser. You get clean sound effects without copyright or licensing problems.
+      </p>
+      <p style="color:var(--soft);font-size:13.5px;line-height:1.65;margin:0;">
+        <b>Screen Capture:</b> Play the artifact in Claude with sound turned on. Record the browser window in OBS at 60 frames per second, then drop it into Premiere or CapCut.
+      </p>
+    </div>
+
+    <div class="card" style="padding:22px 24px;border-radius:16px;box-shadow:var(--shadow);border-left:4px solid var(--cobalt);">
+      <h4 style="font-family:var(--serif);font-size:18px;color:var(--ink);margin:0 0 8px;">Production Workflow Tips</h4>
+      <p style="color:var(--soft);font-size:13.5px;line-height:1.65;margin:0 0 8px;">
+        <b>Review Storyboard First:</b> Always read Claude's text storyboard before accepting. Changing words and layout in the storyboard stage is much faster than editing code.
+      </p>
+      <p style="color:var(--soft);font-size:13.5px;line-height:1.65;margin:0;">
+        <b>Aspect Ratio Control:</b> Claude's artifact window defaults to landscape. If creating vertical content, explicitly request 1080x1920 portrait dimensions in your prompt.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+
+</main>
+
+<footer class="wrap">
+  
+  <span>Style Library prompts are free to use for your own videos.</span>
+</footer>
+
+
+
+<dialog id="sheet" aria-labelledby="sh-name">
+  <div class="sv">
+    <button class="close" id="sh-close" type="button" aria-label="Close">×</button>
+    <video id="sh-video" controls playsinline preload="metadata"></video>
+  </div>
+  <div class="sb">
+    <div>
+      <div class="meta"><span class="num" id="sh-num"></span><span id="sh-family"></span></div>
+      <h4 id="sh-name"></h4>
+      <p class="look" id="sh-look"></p>
+    </div>
+    <p class="how" id="sh-how"></p>
+    <div class="make">
+      <h5>Make it yours</h5>
+      <div class="seg" role="group" aria-label="Voiceover">
+        <button type="button" id="mode-plain" aria-pressed="true">No voiceover</button>
+        <button type="button" id="mode-vo" aria-pressed="false">With voiceover</button>
+      </div>
+      <p class="mnote" id="mode-note"></p>
+      <label class="field" for="topic">Topic or script
+        <textarea id="topic" placeholder="e.g. How to land your first client with AI automations"></textarea>
+      </label>
+      <label class="field" for="srt" id="srt-wrap" hidden>Voiceover timing
+        <textarea id="srt" placeholder="Paste a word-level SRT or word timestamps. Leave it empty and Claude will ask for them."></textarea>
+      </label>
+      <label class="check" for="story"><input type="checkbox" id="story" checked> <span>Storyboard first: Claude sketches every beat as still frames and waits for your OK before building.</span></label>
+      <div class="fallback" id="fallback" hidden>
+        <p class="mnote">Your browser blocked automatic copying. The prompt is selected below: press Ctrl+C (or Cmd+C).</p>
+        <textarea id="fallback-text" readonly aria-label="Prompt text"></textarea>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="nav2"><button class="pill ghost" type="button" id="sh-prev">Previous</button><button class="pill ghost" type="button" id="sh-next">Next</button></div>
+      <span class="status" id="status" role="status"></span>
+      <button class="pill" type="button" id="sh-copy">Copy prompt</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+// ============================ YOUR LINKS ============================
+// Fill these in and the "More from me" cards will use them.
+// ============================ STYLE CATALOG ============================
+// Add a style: put its folder in /styles/<id>/ (source.html, preview.mp4, poster.jpg) and add an entry here.
+const STYLES = [
+  {
+    id: 'creator-motion', num: '01', name: 'Creator Motion Graphics', family: 'Kinetic Type',
+    look: 'The high-energy business-creator edit: huge condensed caps slamming in word by word, a yellow serif accent on the one word that matters, highlighter swipes, hand-drawn circles and arrows, tilted browser and phone mockups, rolling green counters, film grain and light leaks on near-black.',
+    how: 'Every idea gets its own beat: words land on the beat with punch zooms and shake, the wrong idea gets a red strike and a stamp, proof appears as code-drawn mockups, the key number rolls up and locks with a boom, and whip pans, RGB glitches and flash cuts carry you between scenes.',
+    fonts: 'Anton, Instrument Serif (italic), Inter',
+    demo: 'How to land your first client',
+    replace: 'TL, CUTS, PUNCH, SHAKE, FLASH, LEAK, PUSH, the value curves, the scene functions, SCENES, the chrome() label text and scoreSound()',
+    keep: 'slam, row, swipe, slamMarked, strike, scribble, handArrow, drawYaw, bubble, background, finishing and the compositor',
+    sizes: 'keep statement text at 80 px or more, any label the story depends on at 28 px or more, and key numbers at 120 px or more',
+    voLine: 'Every on-screen word slams in at the start of its spoken word, within 0.03 s. Show 2 to 6 key words per sentence, not a full transcript.',
+    full: '- Full mix (no voiceover): keep the music, have at most about 3 sounds at once, and leave a moment of near-silence before the biggest hit.',
+    voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded, which keeps the music low and plays anything marked soft at about 55%. Mark small sounds (pops, ticks, markers, keys) soft: true. Keep booms for the 2 or 3 biggest moments, never put a riser over a spoken sentence, and keep the drone out from under speech.',
+    sheet: [
+      'Surface: a near-black editing-room background with slow warm and cool glows, a faint drifting grid, a vignette and film grain stepped at 24 fps. Run background() and finishing() on every frame at the reference’s strength.',
+      'Type: Anton in caps for statements, set big (80 to 220 px). Instrument Serif italic in yellow for the one soft or emotional phrase. Inter for labels and small supporting lines. At most one yellow word per line; green only for money and growth numbers; red only for the wrong idea.',
+      'How things appear: words slam in one at a time (large and blurred, settling with an expo ease). Cards, chips and pills pop with overshoot. Mockups swing in with a 3D tilt (drawYaw) or slide up from below.',
+      'Emphasis: punch zoom plus shake on the hardest words; a yellow highlighter swipe that turns the word dark; a hand-drawn circle and arrow onto the thing that matters; a red strike-through for the wrong idea; a stamp for a flat rejection.',
+      'Numbers: a rolling counter in green with a glow. When it locks: a boom, a white flash, a light leak and spark streaks.',
+      'Proof shots: stylized mockups drawn in code (browser pages, phone chats, dashboards, cards) with invented, generic names. No real logos, brand names or real people, and nothing that would pass as a real receipt or a real message. Label figures as examples when they are illustrative.',
+      'Scene changes: every new idea gets a cut, rotating between whip pans with motion blur, RGB glitches and flash cuts. Inside a scene keep things continuous: lines stack, shift up, get struck out, and new lines arrive.',
+      'Chrome: a small topic label at the top left, plus a STEP pill only when the content is a real sequence.',
+      'Pace: the hook lands in under 2 seconds, something new happens every 0.5 to 1.5 seconds, and the takeaway holds about 1.5 seconds at the end.',
+    ],
+    sound: [
+      'Music: a low drone and a riser into the first big word, the half-time beat (k.music) under the body, a tape stop on the wrong idea, and the beat back for the takeaway. Booms duck the music on their own.',
+      'Map events to the kit: word slams get "slam" (bigger word, more gain); pills, chips and cards get "pop"; cuts get "whoosh", "glitch" or a "slam" on the flash; highlighter and hand-drawn marks get "marker"; strike-throughs get "strike"; typing gets "keys"; a sent message "send", an incoming one "ping"; clicks "click"; counters "tick" only when the shown number changes and never more than 12 per second; the big number lands on "boom" + "slam" + "shimmer"; a rejection gets "stamp".',
+    ],
+  },
+  {
+    id: 'chalk-talk', num: '02', name: 'Chalk Talk', family: 'Hand-Drawn',
+    look: 'A teacher at a long green slate: grainy chalk strokes that skip over the board\u2019s tooth, colored chalk for emphasis, dust falling from the stick as it writes, faint ghosts of old lessons, a wooden frame and a dusty chalk tray.',
+    how: 'One continuous lesson along the board: a visible chalk stick writes every word and draws every line, the camera tracks to the next stretch of slate, numbers are re-chalked as they count, pink chalk rings the key moments, and a felt eraser wipes a section clean for the takeaway.',
+    fonts: 'Cabin Sketch (700), Kalam (400 and 700)',
+    demo: 'Get 1% better every day',
+    replace: 'TL, CAM, the counter curve (cntStep, cntVal, cntText), ITEMS, drawCounter(), WIPE and its timing, and scoreSound()',
+    keep: 'board(), tooth(), noise2, chalkLine, chalkText, layoutText, resample, quad, ellipse, wipeMask, the frame and tray, the chalk stick, the eraser, dust() and the compositor',
+    sizes: 'keep headings at 90 px or more, chalked writing at 56 px or more, labels at 36 px or more, and key numbers at 72 px or more',
+    voLine: 'Each line of chalk starts being written as its first word is spoken and finishes by the end of that phrase; a short label can land on a single word. Write the key phrase on the board, not the whole transcript.',
+    full: '- Full mix (no voiceover): room tone, chalk and eraser sounds, and soft plucks on the big moments. No music.',
+    voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded. Mark chalk scratches and taps soft: true so they sit under the voice, keep the room tone very low, and keep plucks for the 2 or 3 biggest moments only.',
+    sheet: [
+      'Surface: one long slate (BW wide, 720 tall) baked once with mottled green, faint chalk ghosts of old lessons and old eraser smears. The tooth pattern is punched out of the chalk layer every frame so strokes break like real chalk. Keep the wooden frame, the tray with chalk pieces, the classroom light falloff and the fine grain.',
+      'Writing: everything appears by being chalked on in order. Letters arrive one at a time with a little jitter; lines are drawn along their path with small skips. The chalk stick follows the tip whenever something is being written, and dust falls from it.',
+      'Type: Cabin Sketch for titles and the big takeaway, Kalam for equations, labels and notes. White chalk for content, yellow for the main idea and curves, pink for emphasis and key numbers, blue for side notes. Exponents and small marks use the dy offset on text parts.',
+      'Camera: one board, one continuous shot. The camera tracks along the slate to a fresh stretch for each new idea (CAM keys) and leans in gently on the key moment. No cuts.',
+      'Emphasis: pink rings around the key number or point, yellow underlines and brackets, chalk arrows that lead the eye along the board.',
+      'Numbers: re-chalked as they count (a fresh scrawl about 10 times a second), then ringed when they land.',
+      'Scene change: the felt eraser wipes a section back and forth, leaving a faint haze, and the next idea is written in the cleared space.',
+      'Diagrams: draw real charts to scale for the topic, with axes, labels and curves computed from the actual function.',
+      'Pace: something is always being written. Allow 0.4 to 1.2 seconds per line and hold the takeaway about 1.5 seconds.',
+    ],
+    sound: [
+      'Bed: quiet room tone only, no music. A double knock on the board can open the lesson.',
+      'Chalk: every word gets its own scratch (grainy band-passed noise bursts with a tap where the stick lands), timed by character position across its write window. Lines get one long scratch; rings and underlines a little louder. Use the score helpers tap, scratch, write and pluck, built on k.hiss and k.voice.',
+      'Counter: a short scratch each time the shown number changes. Eraser: a felt swish for each pass, panned with the eraser.',
+      'Big moments: soft plucked notes, two for a landed number and a rising arpeggio for the takeaway. Keep it gentle; this is a lesson, not a trailer.',
+    ],
+  },
+  {
+    id: 'clean-tech', num: '03', name: 'Clean Tech', family: 'Kinetic Type',
+    look: 'A calm, bright product-explainer look: cool off-white with a drifting dot grid, crisp Inter Tight words that rise into place, white UI cards with soft shadows, one electric blue accent, mono labels and a green check for anything finished.',
+    how: 'Short statements rise word by word and the key word gets a blue pill. Ideas become small working diagrams: a prompt card that types and sends, nodes that pop in, a dot that travels a loop, task rows that tick off, a counter that climbs, a document that fills in. Clean push and zoom-through cuts move between ideas.',
+    fonts: 'Inter Tight (500 to 800), JetBrains Mono (500 and 700)',
+    demo: 'How AI agents get work done',
+    replace: 'TL, CUTS, BUMPS, the counter curve (stepCount), LOOP and ARCS, promptCard(), node(), the scene functions, SCENES and scoreSound()',
+    keep: 'the ui-kit helpers (rr, track, rise, riseLine, pillBehind, typed, softCard, checkMark, composite, padBed), background(), cam() and the vignette in explainer()',
+    sizes: 'keep statements at 78 px or more, card text at 26 px or more, mono labels at 18 px or more, and key numbers at 120 px or more',
+    voLine: 'Each word rises at the start of its spoken word, within 0.03 s, and the blue pill lands on the stressed word. Show 2 to 6 key words per sentence, not a full transcript.',
+    full: '- Full mix (no voiceover): keep the soft pad with light hats, at most about 3 sounds at once, and a short gap before the takeaway pill.',
+    voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded, which keeps the pad low and plays anything marked soft at about 55%. Mark word ticks, pops and row ticks soft: true, keep swipes for the 2 or 3 key pills, and never put a riser over a spoken sentence.',
+    sheet: [
+      'Surface: cool off-white (#f5f6f8) with a slowly drifting dot grid, a faint blue glow top right and a faint green glow bottom left, and a light vignette. Keep background() and the vignette on every frame.',
+      'Type: Inter Tight 800 for statements, centered or left aligned, never all caps. Inter Tight 500 to 700 for card text. JetBrains Mono in caps with letter spacing for small labels (THE SHIFT, TASKS, STEPS TAKEN). Ink #0d0f14, muted grey for secondary text, electric blue #2f5bff as the only accent, green #18b46b only for done and checked.',
+      'How things appear: each word rises from behind a mask with an expo ease (rise, riseLine). Cards slide up and fade in, nodes pop in with a small overshoot, text in input cards is typed with a blinking caret.',
+      'Emphasis: a blue pill grows behind the one key word and the word turns white (pillBehind). Small blue glows on whatever is active. A green check pops in for anything finished.',
+      'Diagrams: build ideas from small UI pieces drawn in code: white rounded cards (softCard), mono labels, progress bars, a dashed path with a travelling dot, a counter. Use invented, generic names for any companies or products.',
+      'Camera: a gentle push-in over each scene and a small bump when a pill lands (cam with BUMPS).',
+      'Scene changes: clean horizontal pushes for a new idea and a zoom-through into a detail (composite with CUTS). No glitches or flashes.',
+      'Pace: the hook lands in under 2 seconds, one new element every 0.3 to 1 second, and the takeaway holds about 1.5 seconds.',
+    ],
+    sound: [
+      'Bed: a soft synth pad (padBed) with light hats and a gentle kick under the body, dropping out for the hook and the ending.',
+      'Map events to the kit: rising words get a tiny glassy tick (rise1); blue pills get a clean swipe with a bell note; cards and nodes get "pop"; typing gets "keys" and sending gets "send"; scene pushes get "whoosh"; a zoom-through gets a short "riser" then a whoosh; finished tasks and checks get a two-note chime; counters "tick" only when the shown number changes.',
+    ],
+  },
+  {
+    id: 'software-walkthrough', num: '04', name: 'Software Walkthrough', family: 'Screen and UI',
+    look: 'A polished screen-recording tutorial built entirely in code: an app window on a soft gradient desktop, a real-feeling cursor with click ripples, a camera that zooms into what matters, yellow-edged spotlights, numbered step callouts and a calm pad underneath.',
+    how: 'It shows the clicks, not just the idea: a title card, then the cursor moves through the real flow while the camera follows it in and out, modals and menus open, fields get typed, toggles flip, and a dark step pill at the bottom left counts you through. It ends on the result actually happening and a short lower third.',
+    fonts: 'DM Sans (400 to 700), DM Mono (400 and 500)',
+    demo: 'Your first automation in an invented app called Flowdesk',
+    replace: 'TL, CAM, CURSOR, STEP_NAMES, the app pieces (sidebar, header, homePage, emptyState, modal, editor), the spotlight calls in explainer(), titleCard(), notification(), outroCard() and scoreSound()',
+    keep: 'the ui-kit helpers (rr, track, rise, riseLine, typed, softCard, cursorArrow, checkMark, padBed), wallpaper(), appWindow() as the frame, spotlight(), cursor(), stepCallout() and the camera transform in explainer()',
+    sizes: 'keep the title card at 90 px or more, step callouts at 28 px, app text at 18 px or more (the camera zooms in on anything smaller), and the lower third at 40 px',
+    voLine: 'Each click lands on the spoken word that names it, the camera starts moving about 0.3 s before the thing it shows is mentioned, and each step pill appears as its step is introduced.',
+    full: '- Full mix (no voiceover): keep the warm pad and soft hats, crisp clicks on every click, and a quiet moment before the result appears.',
+    voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded, which keeps the pad low and plays anything marked soft at about 55%. Keep clicks at full level (they are the proof), mark camera whooshes and ticks soft: true, and keep chimes for the step pills and the final result only.',
+    sheet: [
+      'Surface: a desktop with a soft indigo to teal gradient wallpaper and two slow light blooms. On it, one app window (rounded, deep shadow) with a title bar, a sidebar and a main area. The whole UI is drawn in code, crisp and believable, for an invented app with an invented name. Never copy a real product’s UI, name or logo.',
+      'Type: DM Sans for all UI and titles (700 for headings and selected items, 400 to 500 for body), DM Mono in caps for tiny labels (WHEN, THEN, LIVE). Ink #14161c, muted #6a6f7c, one accent (#5b5bf6) for buttons, selection and the cursor ripple, green #1fb46e for live and success, yellow #ffd60a only for spotlight edges.',
+      'Cursor: a classic arrow that moves along eased waypoints (CURSOR keys), dips slightly on each click, and leaves an accent ripple. Every click has a visible result within 0.1 s: a pressed button, a selected row, an opened menu.',
+      'Camera: one continuous screen recording. Zoom in (1.2x to 1.6x) toward the area being used, hold, and ease back out to the full window between steps (CAM keys). The camera leads the cursor slightly.',
+      'Emphasis: a spotlight dims everything except a rounded cutout with a yellow edge around the one control that matters. Toasts, notifications and a side panel slide in to prove the result.',
+      'Chrome: a title card first (small mono tag, a big two-line title, a pill with the step count and time), a dark numbered step pill at the bottom left that swaps as each step starts, and a dark lower third with a green check at the end.',
+      'Flow: real UI behaviour in order: navigate, empty state, modal with choices, dropdown, continue, editor with connected nodes, typed fields, chips, a toggle that turns on, and the outcome happening (a new row, a message, a file).',
+      'Pace: 3 to 5 seconds per step, never more than one new action at a time, and a 1.5 second hold on the result.',
+    ],
+    sound: [
+      'Bed: a warm, slow pad (padBed) with soft hats while the steps run, no kick. It drops away under the title card for a moment.',
+      'Map events to the kit: every cursor click gets "click"; modals, menus, nodes and chips get "pop" (higher pitch for smaller things); typing gets "keys"; every camera zoom in or out gets a soft pink-noise swell; step pills get a two-note chime that climbs a little with each step; the toggle gets a short bright swish; a toast or the result gets a chime; an incoming notification gets "ping"; panels sliding in get a soft "whoosh".',
+    ],
+  },
+  {
+    id: 'data-story', num: '05', name: 'Data Story', family: 'Data',
+    look: 'A calm, editorial data explainer: deep ink background, one warm accent per idea (coral, teal, sand), Archivo headlines, IBM Plex Mono numbers and labels, charts that draw themselves to scale, and the source always on screen.',
+    how: 'Numbers count up, then shrink into a label as the chart arrives. A line draws itself through the real data with dots popping at each milestone, the part that matters is re-traced in sand, bars grow one by one and get ringed, two cards set the key comparison side by side, and a plain-language takeaway lands with a sand pill.',
+    fonts: 'Archivo (500 to 800), IBM Plex Mono (500 and 600)',
+    demo: 'How we got to 8 billion people (UN World Population Prospects)',
+    replace: 'the data (POP, BILLIONS, YEARS_PER), TL, CUTS, the X and Y scales, the scene functions, SCENES, the source line text and scoreSound()',
+    keep: 'the ui-kit helpers (rr, track, rise, riseLine, pillBehind, composite, padBed), background(), tag(), cam(), popAt() (monotone curve), inverseYear(), the counter and the bar, card and pill drawing patterns',
+    sizes: 'keep headlines at 50 px or more, the takeaway at 80 px or more, key numbers at 100 px or more, and axis labels at 16 px or more',
+    voLine: 'A number starts counting as it is spoken and locks on its last syllable; a line reaches each milestone as that year or value is said; each bar grows as its label is named.',
+    full: '- Full mix (no voiceover): keep the low pad with a soft pulse, at most about 3 sounds at once, and a short gap before the big comparison lands.',
+    voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded, which keeps the pad low and plays anything marked soft at about 55%. Mark counter ticks and word ticks soft: true, keep the data plucks quiet and short, and keep "boom" for the single biggest number.',
+    sheet: [
+      'Data first: use real, sourced numbers for my topic and plot them to scale (no invented values, no cropped axes that exaggerate). Put a short "Source: ..." line at the bottom left of every frame. If a figure is an estimate, say so in the narration or a label. If you cannot verify a number, ask me instead of guessing.',
+      'Surface: deep ink (#0f141c) with a faint coral glow top left and a faint teal glow bottom right, very subtle gridlines, and a vignette.',
+      'Type: Archivo 800 for headlines and big numbers, IBM Plex Mono for every label, axis value, unit and the source line, and a small coral mono tag in caps above each headline. Ink #eef1f5, muted #7d8796.',
+      'Color has meaning: one accent per idea. Coral for the main series, teal for supporting bars, sand (#f2c14e) for the one thing the viewer should remember. Never more than three colors on screen.',
+      'Charts: lines draw left to right with a glowing head and a soft area fill, using a monotone curve through the real points so it never overshoots; milestone dots pop as the line passes them; bars grow from the baseline one by one with their value counting up on top; the key bar or span gets a sand ring or a sand re-trace with a glow.',
+      'Numbers: big counters with thousands separators count up with an expo ease and lock; a comparison card pair shows two numbers side by side with a sand multiplier counting between them.',
+      'Scene changes: soft slide-ups and clean pushes (composite with CUTS). The first number can shrink into a chart label so the opening flows into the chart without a cut.',
+      'Takeaway: one plain sentence in Archivo with a sand pill behind the key phrase, then a single mono context line. Hold about 1.5 seconds.',
+    ],
+    sound: [
+      'Bed: a low, thoughtful pad (padBed) with a soft pulse once the charts start; no big drums.',
+      'Map events to the kit: counters "tick" only when the shown number changes, rising in pitch; each data milestone the line passes gets a soft pluck that climbs a pentatonic scale; each bar gets a pluck whose pitch follows its height; rings and pills get a bright swipe; scene changes get "whoosh"; cards get "pop"; the single biggest number lands on "boom" with a bell note; the takeaway gets an open chord.',
+    ],
+  },
+  {
+    id: 'pop-info', num: '06', name: 'Pop Info', family: 'Illustrated',
+    look: 'A flat-vector animated infographic, drawn entirely in code: a cosy cartoon scene (here a grocery aisle in soft perspective), one small character with a big feeling, a teal thought bubble that carries the idea, a counter, a dotted path and an iris wipe in and out. Muted room colours, warm product colours, rounded Fredoka type.',
+    how: 'The scene builds itself: an iris opens, shelves slide in from both sides, the character pops up and reacts (annoyed, looking, sighing). The idea appears as a bubble with a friendly mascot, a number counts up inside it with a little tag, a dotted path draws through the scene to a pin, and the camera slowly pushes toward the point of interest. An iris closes on the takeaway.',
+    fonts: 'Fredoka (500 to 700)',
+    demo: 'Why is the milk always at the back of the store?',
+    replace: 'TL, the scene (drawRoom, drawShelf and the product layout ROWS, or a new setting for my topic), the character (drawShopper) and its reactions, the bubble contents (drawBubble: mascot, counter and tag), drawPath, the camera move in renderAt and scoreSound()',
+    keep: 'the 680 x 383 design space with renderAt() scaling it to the canvas, prog(), popS(), wobble(), blink(), the easings, rr(), the dust layer, the iris wipe (drawWipe), the parallax split between background and foreground, and the explainer() compositor',
+    sizes: 'in the 680 x 383 design space keep the main number at 21 px or more, labels at 11 px or more and any title at 26 px or more (that is about 40, 21 and 50 px at 1280x720), and keep the character and the bubble large',
+    voLine: 'The character reacts on the word that carries the feeling; the bubble pops in as the idea is introduced; the counter starts as the number is spoken and locks on its last syllable; the path draws while the journey is described and the pin drops on the destination.',
+    full: '- Full mix (no voiceover): a light, friendly music bed (k.music at a low gain), at most about 3 sounds at once, and a short quiet moment before the pin or the payoff lands.',
+    voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded, which keeps the music low and plays anything marked soft at about 55%. Mark taps, counter ticks and path dots soft: true and keep pops for the bubble, the tag and the pin.',
+    sheet: [
+      'Everything is original flat vector art drawn with canvas paths: no images, no outlines, simple rounded shapes, one flat shadow tone per object, soft highlights, and a few drifting dust specks for life. Invent the setting and characters for my topic; never copy a real brand, logo, mascot or packaging.',
+      'Draw in the 680 x 383 design space and let renderAt() scale it, so the art stays crisp at any size. Keep shapes big and readable on a phone.',
+      'Palette: a muted, desaturated room (sage wall #D7DCCB, warm floor #C4B79D), warm accent objects (#E07A5F, #F2CC8F, #81B29A, #6C9BB8), deep teal #2F6F73 for the idea bubble, coral #E85D4A for alerts and signs, and sunny yellow #FFD86B for tags, the iris ring and sparkles. Text is white or dark teal.',
+      'One character with a strong, simple emotion (eyebrows, mouth, blinks, a sweat drop, a sigh) is the emotional anchor. It sits in the foreground with gentle parallax while the camera pushes the background.',
+      'The idea lives in a bubble: a friendly mascot or icon, a number that counts up with an eased curve, and a small pill tag. Numbers must be real or clearly framed as an example; if you cannot verify one, ask me.',
+      'Motion is springy and playful: things pop in with a back-eased scale (popS), settle with a decaying wobble, the scene slides in from the sides, a dotted path draws itself and a pin drops, and the camera does one slow push. Open and close with the teal iris wipe with a yellow ring.',
+      'Keep it to one scene per idea, with clear staging: setting, character reaction, the idea in the bubble, the visual proof (path, arrow or chart), then the iris closes.',
+    ],
+    sound: [
+      'Soft, toy-like and sparse: rounded pops for the bubble, tags and pin, little sine bloops for character reactions, wooden taps for landings, counter steps and path dots (thinning out as the counter lands), airy whooshes for the iris and the slides, and one breathy sigh.',
+      'No chimes, bells, pings or sparkle sounds, even for winks and sparkles on screen. The cartoon carries the charm; the sound only gives it weight.',
+    ],
+  },
+];
+
+// ============================ PROMPT TEMPLATE ============================
+const T = {
+  intro: (s) => `I want an animated video in the "${s.name}" style (${s.family}) from the JoyBoy Motion Graphics Library. Below is a complete, working reference animation in this style: its core helpers (CM), a synthesized sound kit (SFX), the style's scenes, its sound score and the player page. Treat that file as the ground truth for how this style looks, moves and sounds, and rebuild it around my content.`,
+  noTopic: '[No topic yet. Ask me for my topic or script before building anything.]',
+  noTiming: '[No timing pasted yet. Before building, ask me for a word-level SRT or word timestamps of my voiceover. If I only have the audio file, offer to transcribe it into word timings.]',
+  vo: `How to use the timing:
+- Turn it into a list of words with start and end times in seconds. If the timing is per line only, spread each line's words across its span in proportion to their length.
+- Set the duration to the last word's end plus about 1.2 seconds.
+- Build the timeline (TL) from these times. {VOLINE}
+- Cut between scenes only at idea boundaries (a new step, a new claim, a reveal), never mid-word, and finish each cut just before the next idea's first spoken word.
+- Put the emphasis moves on stressed words. A counter lands at the exact moment its number is spoken.
+- Keep the player's "Load voiceover" button working so I can drop in my audio and hear it in sync.`,
+  story: `STORYBOARD FIRST
+Before building, show me a storyboard and wait for my OK:
+- One HTML page (an artifact if you can) with a grid of 6 to 10 panels, one per beat. Draw each panel on a canvas with the reference's own helpers, scene drawing and finishing pass, so the stills already look like the finished piece. No animation or sound yet.
+- Under each panel: the beat number, its start and end time, the exact on-screen words, the camera move or emphasis, how it gets there from the previous beat (the same scene continuing, or a cut and which kind), and its key sounds.
+- Below the grid, list any facts or numbers you had to assume.
+When I approve it (or after my changes), build the full animation and reuse the storyboard's drawing code.`,
+  direct: `BUILD DIRECTLY
+Skip the storyboard and build the full animation now. Afterwards, list any facts or numbers you assumed.`,
+  build: (s) => `WHAT TO BUILD
+One self-contained HTML file (an artifact if you can), built on the reference file below:
+- Keep the page, the player (play/pause, scrub, time, sound toggle, loop, Load voiceover) and the CM and SFX blocks unchanged.
+- Replace the demo's story: ${s.replace}. Keep and reuse the style's helpers (${s.keep}).
+- Aim for 15 to 40 seconds unless my content needs more, and set the duration in TL.D.
+- Keep window.seek(t), window.DURATION, window.scoreSound and window.SFX exposed, so the video can be rendered frame by frame.
+- Load the style's fonts before the first draw, as the reference does: ${s.fonts}.`,
+  rules: `RULES THAT KEEP IT IN STYLE
+- Change the story, the words and the props; do not change the medium. Draw every subject accurately for my topic and double-check any facts and numbers you show.
+- Every frame is a pure function of t. Use CM.rng(seed) and CM.noise1(seed) for all randomness, never Math.random. Caching static layers is fine.
+- It will be watched on phones: at 1280x720 {SIZES}. Fill the frame.
+- Keep each frame fast, well under 50 ms.
+- Give my topic its own demo content; do not reuse the reference's story ("{DEMO}") unless my content asks for it.`,
+  full: '- Full mix (no voiceover): keep the music, have at most about 3 sounds at once, and leave a moment of near-silence before the biggest hit.',
+  voMix: '- Voiceover mix: the player calls SFX.live with { voiceover: true } once narration is loaded, which keeps the music low and plays anything marked soft at about 55%. Mark small sounds (pops, ticks, markers, keys) soft: true. Keep booms for the 2 or 3 biggest moments, never put a riser over a spoken sentence, and keep the drone out from under speech.',
+  render: `IF YOU CAN RUN CODE
+Render an MP4: open the file in headless Chrome, call window.seek(i / 30) for every frame, capture the canvas and pipe the frames into ffmpeg. Render the effects with SFX.render(window.scoreSound, window.DURATION, 48000, { voiceover: false }), which returns interleaved stereo floats, and mux them in. With a voiceover, render the effects with { voiceover: true } and mix them under my audio file.`,
+};
+function buildPrompt(s, source, o) {
+  const P = [T.intro(s), '', 'MY CONTENT', o.topic.trim() || T.noTopic];
+  if (o.vo) P.push('', 'VOICEOVER TIMING', o.srt.trim() || T.noTiming, '', T.vo.replace('{VOLINE}', s.voLine));
+  P.push('', o.story ? T.story : T.direct, '', T.build(s), '', 'THE STYLE', ...s.sheet.map((l) => '- ' + l), '', T.rules.replace('{SIZES}', s.sizes).replace('{DEMO}', s.demo), '', 'SOUND', ...s.sound.map((l) => '- ' + l), o.vo ? s.voMix : s.full, '- Sync is everything: the sound score reads the same TL times as the picture.', '', T.render, '',
+    'STYLE CARD', `Name: ${s.name}`, `Family: ${s.family}`, `Look: ${s.look}`, `How it explains: ${s.how}`, '',
+    'REFERENCE SOURCE (the complete working file)', '```html', source.trim(), '```');
+  return P.join('\n');
+}
+
+// ============================ PAGE ============================
+const $ = (id) => document.getElementById(id);
+const SRC = {};
+// --- Prompt copying ---
+const loadSource = (s) => SRC[s.id] || (SRC[s.id] = fetch(`styles/${s.id}/source.html`).then((r) => { if (!r.ok) throw new Error('missing source'); return r.text(); }).then((txt) => (SRC[s.id + ':text'] = txt)));
+let family = 'All', current = 0, mode = 'plain';
+
+function renderFilters() {
+  const fams = ['All', ...new Set(STYLES.map((s) => s.family))];
+  $('filters').innerHTML = fams.map((f) => `<button class="chip" type="button" aria-pressed="${f === family}" data-f="${f}">${f}<span>${f === 'All' ? STYLES.length : STYLES.filter((s) => s.family === f).length}</span></button>`).join('');
+  $('filters').querySelectorAll('.chip').forEach((b) => b.addEventListener('click', () => { family = b.dataset.f; renderFilters(); renderGrid(); }));
+}
+function renderGrid() {
+  const list = STYLES.filter((s) => family === 'All' || s.family === family);
+  $('grid').innerHTML = list.map((s) => `
+    <article class="card">
+      <button class="thumb" type="button" data-open="${s.id}" aria-label="Watch ${s.name}">
+        <img src="styles/${s.id}/poster.jpg" alt="" loading="lazy">
+        <video muted loop playsinline preload="none" data-src="styles/${s.id}/preview.mp4" hidden></video>
+      </button>
+      <div class="card-body">
+        <div class="meta"><span class="num">#${s.num}</span><span>${s.family}</span></div>
+        <h3>${s.name}</h3>
+        <p>${s.look}</p>
+        <button class="pill" type="button" data-open="${s.id}">Get the prompt</button>
+      </div>
+    </article>`).join('');
+  bindOpen($('grid'));
+  $('grid').querySelectorAll('.thumb').forEach((th) => {
+    const v = th.querySelector('video');
+    th.addEventListener('mouseenter', () => { if (!v.src) v.src = v.dataset.src; v.hidden = false; v.play().catch(() => {}); });
+    th.addEventListener('mouseleave', () => { v.pause(); v.hidden = true; });
+  });
+}
+function bindOpen(root) { root.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => openSheet(STYLES.findIndex((s) => s.id === b.dataset.open)))); }
+function setMode(m) {
+  mode = m; $('mode-plain').setAttribute('aria-pressed', m === 'plain'); $('mode-vo').setAttribute('aria-pressed', m === 'vo'); $('srt-wrap').hidden = m !== 'vo';
+  $('mode-note').textContent = m === 'vo'
+    ? 'Timed to your narration: every on-screen word lands on its spoken word, and the effects sit under your voice.'
+    : 'A standalone video with the full mix: music, impacts and effects, no narration.';
+}
+function openSheet(i) {
+  if (i < 0) return;
+  current = (i + STYLES.length) % STYLES.length; const s = STYLES[current];
+  $('sh-num').textContent = '#' + s.num; $('sh-family').textContent = s.family; $('sh-name').textContent = s.name; $('sh-look').textContent = s.look;
+  $('sh-how').innerHTML = '<b>How it explains:</b> ' + s.how;
+  const v = $('sh-video'); v.poster = `styles/${s.id}/poster.jpg`; v.src = `styles/${s.id}/preview.mp4`;
+  $('status').textContent = ''; $('fallback').hidden = true;
+  const multi = STYLES.length > 1; $('sh-prev').hidden = !multi; $('sh-next').hidden = !multi;
+  loadSource(s).catch(() => {});
+  if (!$('sheet').open) $('sheet').showModal();
+  try { location.hash = s.id; } catch (e) {}
+}
+function closeSheet() { $('sh-video').pause(); $('sheet').close(); }
+async function copyPrompt() {
+  const s = STYLES[current]; let src = SRC[s.id + ':text'];
+  if (!src) { $('status').textContent = 'Loading the style…'; try { src = await loadSource(s); } catch (e) { $('status').textContent = 'Could not load this style. Try again.'; return; } }
+  const text = buildPrompt(s, src, { topic: $('topic').value, srt: $('srt').value, vo: mode === 'vo', story: $('story').checked });
+  try { await navigator.clipboard.writeText(text); $('status').textContent = 'Copied. Paste it into a new Claude chat.'; $('fallback').hidden = true; }
+  catch (e) { const f = $('fallback-text'); f.value = text; $('fallback').hidden = false; f.focus(); f.select(); $('status').textContent = ''; }
+}
+
+$('mode-plain').addEventListener('click', () => setMode('plain'));
+$('mode-vo').addEventListener('click', () => setMode('vo'));
+$('sh-copy').addEventListener('click', copyPrompt);
+$('sh-close').addEventListener('click', closeSheet);
+$('sh-prev').addEventListener('click', () => openSheet(current - 1));
+$('sh-next').addEventListener('click', () => openSheet(current + 1));
+$('sheet').addEventListener('close', () => { $('sh-video').pause(); try { history.replaceState(null, '', location.pathname); } catch (e) {} });
+$('sheet').addEventListener('click', (e) => { if (e.target === $('sheet')) closeSheet(); });
+window.buildPrompt = buildPrompt; window.STYLES = STYLES;
+
+renderFilters(); renderGrid(); setMode('plain'); bindOpen(document.querySelector('.feature'));
+{ const id = (location.hash || '').slice(1); const i = STYLES.findIndex((s) => s.id === id); if (i >= 0) openSheet(i); }
+
+// ============================ CLONE ANY STYLE ============================
+const CLONE = `I want you to learn how to make code-drawn animated videos, then use that to recreate a NEW visual style from the screenshot(s) I've attached.
+
+Below this message is a prompt from the JoyBoy Motion Graphics Library. It contains a complete, working reference animation: a core helper block (CM), a synthesized sound kit (SFX), one style's scenes and sound score, and a player page. Treat it as a teaching example and as the engine you will build on. Do NOT build the style it describes, and ignore its "MY CONTENT", "VOICEOVER" and "BUILD DIRECTLY" instructions. Only my instructions here count.
+
+MY TOPIC: [write your topic or script here, or leave blank and I'll ask you]
+
+STEP 1: LEARN THE SYSTEM
+Read the reference file closely and tell me in a few short bullets how it works:
+- Every frame is a pure function of time t. Randomness comes only from CM.rng and CM.noise1, never Math.random.
+- One timeline object (TL) drives both the picture and the sound score, so they stay in sync.
+- How scenes, cuts, camera moves, easing, layers and the finishing pass (grain, glow, vignette) are built.
+- How the SFX kit works: named sounds, k.voice and k.hiss, music, and the voiceover mix.
+- What the player exposes: window.seek(t), window.DURATION, window.scoreSound and window.SFX.
+Keep the CM block, the SFX block and the player unchanged in everything you build. Only the style part changes.
+
+STEP 2: STUDY MY SCREENSHOT AND WRITE A STYLE CARD
+Look at the attached image(s) and write a style card with:
+- Palette: 4 to 7 colors as hex values, each with its role (background, text, accent, highlight, etc.).
+- Surface: background treatment, textures, grain, gradients, glow, paper or film feel.
+- Type: the closest free Google Fonts for each role (headline, body, labels, numbers), with weights, sizes, case and letter spacing.
+- Shapes and layout: grid, margins, corner radius, stroke widths, shadows, icon style, how dense or airy it is.
+- Emphasis: how this style makes one thing stand out (color, boxes, underlines, scale, arrows).
+- Motion (inferred, since a screenshot is still): how elements enter, how emphasis animates, how scenes change, camera moves and pace. Explain why each choice fits the look.
+- Sound: which SFX kit sounds match this style and when to use them.
+Mark clearly what you saw in the image and what you inferred.
+Recreate the STYLE, not the content: never copy logos, brand names, characters, mascots, real people or the exact artwork from the screenshot. Use original shapes, invented names and my topic.
+
+STEP 3: PROVE THE MATCH BEFORE BUILDING
+Make a quick test page (an artifact if you can) with:
+- One still frame in the new style, drawn with the engine, next to a short description of how it compares to my screenshot.
+- A 5 to 8 second looping sample with sound, so I can feel the motion.
+Then list the 3 biggest differences between your frame and my screenshot, fix them, and show me the updated frame. Wait for my OK before the full build.
+
+STEP 4: BUILD THE FULL ANIMATION
+Once I approve, build one self-contained HTML file (an artifact if you can) on top of the reference file:
+- Keep the page, player, CM and SFX blocks unchanged. Replace the style's timeline, scenes, helpers and sound score with the new style.
+- 15 to 40 seconds about my topic, every frame fast (well under 50 ms), text big enough to read on a phone at 1280x720.
+- Load the new fonts before the first draw, the same way the reference does.
+- Double-check any facts and numbers you show.
+If you can run code, also render it to an MP4: call window.seek(i / 30) for each frame, capture the canvas, pipe the frames into ffmpeg, and mux in the audio from SFX.render(window.scoreSound, window.DURATION, 48000, { voiceover: false }).
+
+STEP 5: GIVE ME A REUSABLE STYLE PROMPT
+Finally, write a prompt for this new style in the same format as the library prompt below (style card, the style rules, the sound rules, and what to replace or keep), so I can reuse the style for any topic in a new chat. Tell me to attach the finished HTML file as its reference source.
+
+==================== LIBRARY PROMPT (reference only) ====================`;
+function buildClone(s, source, topic) {
+  const head = CLONE.replace('[write your topic or script here, or leave blank and I\'ll ask you]', topic.trim() || '[No topic yet. Ask me for my topic before building.]');
+  return head + '\n\n' + buildPrompt(s, source, { topic: '', srt: '', vo: false, story: false });
+}
+$('clone-base').innerHTML = STYLES.map((s, i) => `<option value="${i}">#${s.num} ${s.name}</option>`).join('');
+$('clone-copy').addEventListener('click', copyClone);
+async function copyClone() {
+  const s = STYLES[parseInt($('clone-base').value, 10) || 0]; let src = SRC[s.id + ':text'];
+  if (!src) { $('clone-status').textContent = 'Loading the style\u2026'; try { src = await loadSource(s); } catch (e) { $('clone-status').textContent = 'Could not load this style. Try again.'; return; } }
+  const text = buildClone(s, src, $('clone-topic').value);
+  try { await navigator.clipboard.writeText(text); $('clone-status').textContent = 'Copied. Paste it into a new Claude chat and attach your screenshots.'; $('clone-fallback').hidden = true; }
+  catch (e) { const f = $('clone-fallback-text'); f.value = text; $('clone-fallback').hidden = false; f.focus(); f.select(); $('clone-status').textContent = ''; }
+}
+</script>
+
+
+</body>
+</html>
